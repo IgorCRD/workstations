@@ -1,0 +1,40 @@
+work:
+  includes:
+    - components/vs/v17p
+    - components/os/w10e
+    - stacks/sql/management
+    - stacks/dotnetfx/library
+    - stacks/dotnetfx/web
+  default: true
+  provider:
+    memory: 4096
+    cpus: 2
+    linked_clone: <%= !ENV['VAGRANT_LINKED_CLONE'].to_s.empty? %>
+  chef:
+    cookbooks:
+      - gusztavvargadr_workstations_os
+      - gusztavvargadr_workstations_core
+      - gusztavvargadr_workstations_nuget
+    json: 
+      gusztavvargadr_workstations_os:
+        requirements:
+          locales:
+            system: en-US
+            ui: en-US
+            user: en-US
+          datetime:
+            timezone: UTC
+      gusztavvargadr_workstations_core:
+        tools:
+          windows:
+            SQL Server Management Studio 17:
+              source: https://download.microsoft.com/download/5/0/B/50B02ECB-CB5C-4C23-A1D3-DAB4467604DA/SSMS-Setup-ENU.exe
+              install:
+                - /install
+                - /quiet
+                - /norestart
+              directory: /Program Files (x86)/Microsoft SQL Server/140/Tools/Binn/ManagementStudio
+          chocolatey:
+            nuget.commandline:
+          files:
+            file:///vagrant-workstations/src/components/nuget/NuGet.Config: /Users/vagrant/AppData/Roaming/NuGet/NuGet.Config
